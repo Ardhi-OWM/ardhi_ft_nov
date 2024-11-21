@@ -1,21 +1,456 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap");
+@import "flowbite";
+@import "leaflet/dist/leaflet.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base Theme Variables (Fallbacks) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --text-color-light: rgba(8, 8, 8, 0.87);
+  --background-color-light: #ffffff;
+  --text-color-dark: rgba(255, 255, 255, 0.87);
+  --background-color-dark: #00000a;
+
+  font-family: "Space Grotesk", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Light Mode */
+html.light {
+  --text-color: var(--text-color-light);
+  --background-color: var(--background-color-light);
+}
+
+html.light body {
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+/* Dark Mode */
+html.dark {
+  --text-color: var(--text-color-dark);
+  --background-color: var(--background-color-dark);
+}
+
+html.dark body {
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+/* General Body Settings */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden; /* Prevent scrollbars by default */
+  height: 100%; /* Ensure the body spans the full viewport */
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Allow scrolling only for content that overflows */
+main {
+  flex: 1;
+  overflow-y: auto; /* Enable scrolling only for main content */
+}
+
+/* Links */
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+}
+
+/* Link hover effects */
+nav a:hover {
+  color: #2ecc40;
+}
+
+/* Headings */
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+/* Other specific components */
+.content-container {
+  margin-top: 80px;
+  padding-left: 20vw;
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.view-analytics-container {
+  margin-top: 80vh;
+  z-index: 2;
+}
+
+.custom-border::before {
+  content: "";
+  position: absolute;
+  top: 8%;
+  right: 0;
+  bottom: 2%;
+  width: 1px;
+  background-color: rgba(107, 114, 128, 0.25);
+}
+
+/* Dropdowns */
+.dropdowns {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #4a5568;
+  cursor: pointer;
+  background-color: #f7fafc;
+}
+
+/* Dark mode for dropdowns */
+.dark .dropdowns {
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
+
+/* Dropdown hover styles */
+.dropdowns:hover {
+  background-color: #ffffff;
+  color: #1a202c;
+}
+
+/* Dark mode hover styles */
+.dark .dropdowns:hover {
+  background-color: #4a5568;
+  color: #f7fafc;
+}
+
+/* Dark Mode Media Query */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --text-color: rgba(255, 255, 255, 0.87);
+    --background-color: #242424;
+  }
+  body {
+    color: var(--text-color);
+    background-color: var(--background-color);
+  }
+  nav a:hover {
+    color: #2ecc40;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Light Mode Media Query */
+@media (prefers-color-scheme: light) {
+  :root {
+    --text-color: rgba(8, 8, 8, 0.87);
+    --background-color: #ffffff;
+  }
+  body {
+    color: var(--text-color);
+    background-color: var(--background-color);
+  }
+  nav a:hover {
+    color: #2ecc40;
+  }
 }
+/* ----------------------- Home  -----------------*/
+/* NavigationMenuContent Styles */
+.NavigationMenuContent {
+  position: relative;
+  top: 100%;
+  left: 0;
+  z-index: 9999;
+  background-color: var(--background-color);
+  color: var(--text-color );
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  width: 300px;
+  padding: 1rem;
+  display: block;
+}
+@media (min-width: 1024px) {
+  .NavigationMenuContent {
+    display: block !important; /* Ensure it is displayed */
+    z-index: 9999; /* Ensure it is above other elements */
+    position: relative; /* Position relative to the trigger */
+  }
+}
+
+.NavigationMenuItem {
+  position: relative;
+  overflow: visible;
+}
+
+.NavigationMenuTrigger {
+  padding: 0.5rem 1rem;
+  background-color: var(--sidebar-background);
+  border: none;
+  cursor: pointer;
+}
+
+.NavigationMenuTrigger:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+/* ----------------------- Footer and Header -----------------*/
+footer {
+  background-image: radial-gradient(
+    rgba(0, 0, 0, 0) 1px,
+    var(--background-color) 1px
+  );
+  background-size: 4px 4px;
+  backdrop-filter: blur(3px);
+  line-height: 14px;
+}
+footer::before {
+  display: block;
+  content: "";
+  position: absolute;
+  height: 1px;
+  opacity: 0.2;
+}
+
+header {
+  background-image: radial-gradient(
+    rgba(0, 0, 0, 0) 1px,
+    var(--background-color) 1px
+  );
+  background-size: 4px 4px;
+  backdrop-filter: blur(3px);
+}
+
+header::before {
+  display: block;
+  content: "";
+  height: 1px;
+  opacity: 0.2;
+}
+
+/* -----------------------Calendar-----------------*/
+.rdp {
+  max-width: 12rem; /* Smaller overall width */
+  font-size: 0.75rem; /* Reduce font size further */
+  margin: 0 auto; /* Center the calendar */
+  border: 1px dashed rgba(0, 128, 0, 0.4);
+  padding: 0.5rem;
+}
+
+.rdp-day {
+  width: 1.5rem; /* Smaller day cells */
+  height: 1.5rem;
+  line-height: 1.5rem;
+  font-size: 0.8rem; /* Smaller font size for days */
+}
+
+.rdp-nav {
+  justify-content: center; /* Center navigation arrows */
+  font-size: 0.8rem; /* Smaller navigation font */
+}
+
+.rdp-caption {
+  font-size: 0.8rem; /* Smaller month and year text */
+  text-align: center; /* Center align month/year */
+}
+
+.rdp-day_selected {
+  background-color: #4caf50; /* Custom selected background color */
+  color: white; /* Custom selected text color */
+  border-radius: 50%; /* Circular selected day */
+}
+
+.rdp-day:hover {
+  background-color: #81c784; /* Custom hover color */
+  border-radius: 50%; /* Circular selected day */
+}
+.rdp-day_today {
+  background-color: #81c784 !important; /* Green background for today's date */
+  border-radius: 50%; /* Circular shape */
+  font-weight: bold; /* Make it stand out */
+}
+/* ----------------------- Sidebar -----------------*/
+@layer base {
+  :root {
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --sidebar-background: 240 5.9% 0%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+.sidebar-trigger {
+  font-size: 2rem; /* Increase font size */
+  padding: 10px 15px; /* Add padding for larger clickable area */
+  cursor: pointer; /* Ensure pointer cursor for clickable element */
+}
+
+.sidebar-trigger:hover {
+  background-color: rgba(
+    200,
+    200,
+    200,
+    0.25
+  ); /* Light gray background on hover */
+  border-radius: 5px; /* Rounded corners */
+}
+
+@media (max-width: 768px) {
+  .sidebar-trigger {
+    font-size: 1.5rem; /* Slightly smaller font on mobile */
+    padding: 8px 12px;
+  }
+}
+/* ----------------------- Map Component -----------------*/
+.leaflet-control-geosearch-bar {
+  color: #000; /* Ensure the text is visible */
+  font-size: 1rem; /* Adjust font size */
+}
+
+.leaflet-control-geosearch input {
+  background-color: #fff; /* Ensure the input background is visible */
+  border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+  color: #000; /* Ensure text color is visible */
+}
+/* ----------------------- IBM FONTS & UBUNTU MONO -----------------*/
+
+.ubuntu-mono-regular {
+  font-family: "Ubuntu Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ubuntu-mono-bold {
+  font-family: "Ubuntu Mono", monospace;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.ubuntu-mono-regular-italic {
+  font-family: "Ubuntu Mono", monospace;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.ubuntu-mono-bold-italic {
+  font-family: "Ubuntu Mono", monospace;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.ibm-plex-mono-thin {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.ibm-plex-mono-extralight {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.ibm-plex-mono-light {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.ibm-plex-mono-regular {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ibm-plex-mono-medium {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.ibm-plex-mono-semibold {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.ibm-plex-mono-bold {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.ibm-plex-mono-thin-italic {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.ibm-plex-mono-extralight-italic {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.ibm-plex-mono-light-italic {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.ibm-plex-mono-regular-italic {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.ibm-plex-mono-medium-italic {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.ibm-plex-mono-semibold-italic {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.ibm-plex-mono-bold-italic {
+  font-family: "IBM Plex Mono", serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/*
+@layer base {
+   {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+*/

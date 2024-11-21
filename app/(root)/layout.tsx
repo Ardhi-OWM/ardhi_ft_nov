@@ -1,16 +1,18 @@
+// (root)/layout.tsx
+import React from "react";
+import Header from "@components/Shared/Header";
+import Footer from "@components/Shared/Footer";
 
-import React from 'react';
-
-export default function RootLayout({ children,}: Readonly<{
+export default function RootLayout({
+  children,
+}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-      <div>
-        <main>
-          <p className="text-white-1"> LEFT SIDEBAR</p>
-          {children}
-          <p className="text-white-1">RIGHT SIDEBAR</p>
-        </main>
-      </div>
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <main className="flex-1 pt-20">{children}</main>
+      <Footer />
+    </div>
   );
 }
